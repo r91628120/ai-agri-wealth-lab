@@ -35,12 +35,43 @@
     .coach-card h3{margin-top:0;color:#1f6d43}
     .coach-card ul{margin:8px 0 0 20px;padding:0}
     .coach-note{background:#fff7ed;border:1px solid #fed7aa;border-radius:18px;padding:14px;color:#8a3d04;line-height:1.7;margin-top:14px}
+    .home-platform-btn{
+      display:inline-block;
+      margin-bottom:15px;
+      padding:10px 18px;
+      background:#ffffff;
+      color:#2f8f5b;
+      border:2px solid #cde6d5;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:800;
+      transition:all .2s ease;
+    }
+
+    .home-platform-btn:hover{
+      background:#2f8f5b;
+      color:#ffffff;
+    }
+
   </style>
 </head>
 <body>
   <header>
-    <div class="badge"><h1>🌱 AI農業青年財富實驗室</h1></div>
-    <h1>學會種植作物，也學會種植自己的未來</h1>
+    <a
+      href="https://r91628120.github.io/ai-agri-education/#home"
+      class="home-platform-btn">
+        🏠 回 AI農業教育平台
+    </a>
+
+   <div class="badge">
+     <a
+       href="https://r91628120.github.io/ai-agri-education/#home"
+       style="text-decoration:none;color:inherit;">
+        <h1>🌱 AI農業青年財富實驗室</h1>
+     </a>
+   </div>
+    
+   <h1>學會種植作物，也學會種植自己的未來</h1>
     <p class="subtitle">從第一份薪水開始，學習記帳、ETF、複利、被動收入與財報判讀。這不是教學生炒股，而是建立面對人生風險的財務素養。</p>
     <div class="row hero-actions">
       <a class="linkbtn" href="#compound">開始複利模擬</a>
@@ -72,7 +103,7 @@
         <p class="muted">這一區改成「公司研究模式」：學生輸入代號或名稱後，先認識公司、產業、市場與財報入口，而不是做短線看盤。</p>
         <label>輸入代號或名稱</label>
         <input id="stockQuery" placeholder="例如：3149、正達、2330、台積電、0050、0056" oninput="searchCompany()">
-        <div class="row mt data-actions"><button onclick="searchCompany()">查詢公司／ETF</button><button class="secondary" onclick="showCompanyExamples()">查看範例</button><button class="secondary" onclick="clearCompanySearch()">清除查詢</button></div>
+        <div class="row mt data-actions"><button onclick="searchCompany()">查詢公司／ETF</button><button class="secondary" onclick="clearCompanySearch()">清除查詢</button></div>
         <div id="dataStatus" class="status">可查詢內建教學資料。未來可再擴充成學生自建公司研究資料庫。</div>
         <div id="stockResult" class="result"><span class="small">請輸入股票、ETF代號或公司名稱。</span></div>
 
@@ -122,7 +153,7 @@
 
       <div class="card span-12" id="aiCoach">
         <h2>🤖 AI公司研究教練</h2>
-        <p class="muted">這一區不是直接替學生下投資結論，而是引導學生查資料、問對問題、整理成報告。查詢公司後，可按「送到AI公司研究教練」。</p>
+        <p class="muted">這一區不是直接替學生下投資結論，而是引導學生查資料、問對問題、整理成報告。在① ETF複利與20年被動收入模擬器查詢公司後，可按「送到AI公司研究教練」。</p>
         <div id="aiCoachResult" class="result">
           <span class="small">請先在②查詢公司，再於查詢結果按「送到AI公司研究教練」。</span>
         </div>
