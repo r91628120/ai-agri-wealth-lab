@@ -60,14 +60,14 @@
       </div>
 
       <div class="card span-5">
-        <h2>② 股票／ETF資料搜尋</h2>
-        <p class="muted">已升級為：上市接 TWSE OpenAPI、上櫃接 TPEx OpenAPI；ETF 先用交易所資料，再補上教學用殖利率預設。</p>
+        <h2>② 公司研究／ETF教學查詢</h2>
+        <p class="muted">這一區改成「公司研究模式」：學生輸入代號或名稱後，先認識公司、產業、市場與財報入口，而不是做短線看盤。</p>
         <label>輸入代號或名稱</label>
-        <input id="stockQuery" placeholder="例如：0050、0056、00878、2330、台積電、6182" oninput="searchStock()">
-        <div class="row mt data-actions"><button onclick="loadAllMarkets()">更新全部資料</button><button class="secondary" onclick="loadTWSE()">只更新上市</button><button class="secondary" onclick="loadTPEX()">只更新上櫃</button></div>
-        <div id="dataStatus" class="status">尚未更新。可直接搜尋內建範例，或按「更新全部資料」。</div>
-        <div id="stockResult" class="result"><span class="small">請輸入股票或ETF代號。</span></div>
-        <p class="small">資料來源：臺灣證券交易所 OpenAPI、櫃買中心 TPEx OpenAPI、公開資訊觀測站。若瀏覽器擋住跨網域，仍保留內建範例資料供教學使用。</p>
+        <input id="stockQuery" placeholder="例如：3149、正達、2330、台積電、0050、0056" oninput="searchCompany()">
+        <div class="row mt data-actions"><button onclick="searchCompany()">查詢公司／ETF</button><button class="secondary" onclick="showCompanyExamples()">查看範例</button></div>
+        <div id="dataStatus" class="status">可查詢內建教學資料。未來可再擴充成學生自建公司研究資料庫。</div>
+        <div id="stockResult" class="result"><span class="small">請輸入股票、ETF代號或公司名稱。</span></div>
+        <p class="small">定位：這不是看盤工具，而是引導學生進入公開資訊觀測站、年報與財報三張表，完成公司研究報告。</p>
       </div>
 
       <div class="card span-12">
@@ -124,119 +124,100 @@
   </main>
 
 <script>
-const TWSE_URL = 'https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL';
-const TPEX_URLS = [
-  'https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes',
-  'https://www.tpex.org.tw/openapi/v1/tpex_daily_market_value'
-];
-
 const ETF_YIELD_PRESET = {
-  '0050': { yield: 2.5, type: '市值型ETF教學預設' },
-  '0056': { yield: 5.0, type: '高股息ETF教學預設' },
-  '00878': { yield: 5.0, type: '高股息ETF教學預設' },
-  '00919': { yield: 6.0, type: '高股息ETF教學預設' },
-  '00713': { yield: 5.0, type: '高股息ETF教學預設' }
+  '0050': { yield: 2.5, type: '市值型ETF教學預設', name:'元大台灣50', note:'追蹤台灣大型權值股，適合用來教「分散投資」與「市值型ETF」。' },
+  '0056': { yield: 5.0, type: '高股息ETF教學預設', name:'元大高股息', note:'適合用來討論「股息」與「總報酬」的差異。' },
+  '00878': { yield: 5.0, type: '高股息ETF教學預設', name:'國泰永續高股息', note:'適合用來討論ESG、高股息與長期投資。' },
+  '00919': { yield: 6.0, type: '高股息ETF教學預設', name:'群益台灣精選高息', note:'適合提醒學生：高配息不等於保證報酬。' },
+  '00713': { yield: 5.0, type: '高股息ETF教學預設', name:'元大台灣高息低波', note:'可用來說明低波動與股息策略。' }
 };
 
-let stockData = [
-  {Code:'0050',Name:'元大台灣50',ClosingPrice:'',Change:'',TradeVolume:'',Market:'ETF',Source:'內建範例',Yield:2.5,Note:'市值型ETF範例'},
-  {Code:'0056',Name:'元大高股息',ClosingPrice:'',Change:'',TradeVolume:'',Market:'ETF',Source:'內建範例',Yield:5.0,Note:'高股息ETF範例'},
-  {Code:'00878',Name:'國泰永續高股息',ClosingPrice:'',Change:'',TradeVolume:'',Market:'ETF',Source:'內建範例',Yield:5.0,Note:'高股息ETF範例'},
-  {Code:'2330',Name:'台積電',ClosingPrice:'',Change:'',TradeVolume:'',Market:'上市',Source:'內建範例',Note:'個股範例'},
-  {Code:'2412',Name:'中華電',ClosingPrice:'',Change:'',TradeVolume:'',Market:'上市',Source:'內建範例',Note:'個股範例'},
-  {Code:'6182',Name:'合晶',ClosingPrice:'',Change:'',TradeVolume:'',Market:'上櫃',Source:'內建範例',Note:'上櫃個股範例'}
+const companyData = [
+  {Code:'3149', Name:'正達國際光電', ShortName:'正達', Market:'上市', Industry:'光電業', Type:'個股',
+   Business:'玻璃加工、光學元件與觸控相關產品。可作為學生學習「景氣循環、成本、毛利率與現金流」的案例。',
+   Lesson:'適合討論：公司營收會受到產業景氣、產品需求與成本變化影響。學生不要只看股價，要回到財報看營收、毛利率、淨利與現金流。',
+   Risk:'光電與電子零組件產業波動較大，應注意獲利穩定度、負債、現金流與產業競爭。'},
+  {Code:'2330', Name:'台灣積體電路製造', ShortName:'台積電', Market:'上市', Industry:'半導體業', Type:'個股',
+   Business:'晶圓代工龍頭，適合用來教學生看營收成長、毛利率、資本支出與全球供應鏈。',
+   Lesson:'適合討論：好公司也會有合理價格與景氣循環問題。財報閱讀比追高殺低更重要。',
+   Risk:'半導體循環、地緣政治、匯率與大型資本支出。'},
+  {Code:'2412', Name:'中華電信', ShortName:'中華電', Market:'上市', Industry:'通信網路業', Type:'個股',
+   Business:'電信服務、寬頻、行動通訊與企業服務。適合用來教穩定現金流與股利政策。',
+   Lesson:'適合討論：成熟企業不一定高速成長，但可能現金流穩定。',
+   Risk:'市場成長有限、競爭、法規與資本支出。'},
+  {Code:'1216', Name:'統一企業', ShortName:'統一', Market:'上市', Industry:'食品工業', Type:'個股',
+   Business:'食品、飲料、通路與民生消費相關事業。適合農業學生理解「農產品加工、品牌與通路」。',
+   Lesson:'適合討論：農產品從原料到品牌、通路，價值會如何被創造。',
+   Risk:'原物料價格、食品安全、消費需求與通路競爭。'},
+  {Code:'0050', Name:'元大台灣50', ShortName:'0050', Market:'上市', Industry:'ETF', Type:'ETF',
+   Business:'市值型ETF，追蹤台灣大型權值股表現。',
+   Lesson:'適合教「買一籃子股票」與分散風險。', Risk:'仍會受到整體市場波動影響。'},
+  {Code:'0056', Name:'元大高股息', ShortName:'0056', Market:'上市', Industry:'ETF', Type:'ETF',
+   Business:'高股息ETF，用來討論配息、殖利率與總報酬。',
+   Lesson:'適合提醒：配息不等於賺錢，仍要看淨值變化與長期總報酬。', Risk:'成分股與配息政策會調整，殖利率不是保證。'},
+  {Code:'00878', Name:'國泰永續高股息', ShortName:'00878', Market:'上市', Industry:'ETF', Type:'ETF',
+   Business:'高股息與永續概念ETF。',
+   Lesson:'適合討論ESG、高股息與長期投資紀律。', Risk:'市場波動、成分股調整與配息不確定性。'}
 ];
-function money(n){return Math.round(n).toLocaleString('zh-TW')+' 元'}
-function futureValue(monthly, years, annual){
-  const r = annual/100/12; const n = years*12;
-  if(r===0) return monthly*n;
-  return monthly*((Math.pow(1+r,n)-1)/r);
-}
-function calculate(){
-  const monthly=Number(document.getElementById('monthly').value)||0;
-  const years=Number(document.getElementById('years').value)||20;
-  const annual=Number(document.getElementById('annualReturn').value)||0;
-  const y=Number(document.getElementById('yieldRate').value)||0;
-  const fv=futureValue(monthly,years,annual);
-  const principal=monthly*years*12;
-  const passiveYear=fv*y/100;
-  document.getElementById('result').innerHTML = `
-    <div class="small">${years}年後預估資產</div><div class="big">${money(fv)}</div>
-    <div class="row mt"><div><strong>投入本金</strong><br>${money(principal)}</div><div><strong>預估投資成長</strong><br>${money(fv-principal)}</div></div>
-    <div class="row mt"><div><strong>每年被動收入</strong><br>${money(passiveYear)}</div><div><strong>每月被動收入</strong><br>${money(passiveYear/12)}</div></div>`;
-  drawChart(monthly,years,annual); buildTable(years,annual,y);
-}
-function buildTable(years,annual,y){
-  const amounts=[1000,3000,5000,10000,15000];
-  let html='<tr><th>每月投入</th><th>投資年限</th><th>年化報酬</th><th>期末資產</th><th>每年被動收入</th><th>每月被動收入</th></tr>';
-  amounts.forEach(m=>{const fv=futureValue(m,years,annual); const py=fv*y/100; html+=`<tr><td>${money(m)}</td><td>${years}年</td><td>${annual}%</td><td>${money(fv)}</td><td>${money(py)}</td><td>${money(py/12)}</td></tr>`});
-  document.getElementById('compareTable').innerHTML=html;
-}
-function drawChart(monthly,years,annual){
-  const c=document.getElementById('chart'),ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height);
-  const vals=[]; for(let i=1;i<=years;i++) vals.push(futureValue(monthly,i,annual));
-  const max=Math.max(...vals,1); const pad=45; ctx.strokeStyle='#dcebe1'; ctx.lineWidth=1;
-  for(let i=0;i<5;i++){let y=pad+i*(c.height-pad*2)/4; ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(c.width-pad,y);ctx.stroke();}
-  ctx.strokeStyle='#2f8f5b';ctx.lineWidth=4;ctx.beginPath();
-  vals.forEach((v,i)=>{let x=pad+i*(c.width-pad*2)/Math.max(1,years-1); let y=c.height-pad-(v/max)*(c.height-pad*2); if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}); ctx.stroke();
-  ctx.fillStyle='#143123';ctx.font='16px sans-serif';ctx.fillText('資產累積曲線',pad,26);ctx.fillText('第 '+years+' 年：約 '+money(vals[vals.length-1]),pad,52);
-}
-function resetDefault(){document.getElementById('monthly').value=3000;document.getElementById('years').value=20;document.getElementById('annualReturn').value=5;document.getElementById('yieldRate').value=4;calculate();}
 
-function pick(obj, keys){ for(const k of keys){ if(obj && obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') return String(obj[k]).trim(); } return ''; }
-function isLikelyETF(code, name){ return ETF_YIELD_PRESET[code] || /ETF|ETN|指數|高股息|台灣50|臺灣50|永續|ESG/i.test(name || ''); }
-function normalizeRecord(x, market, source){
-  const code = pick(x, ['Code','SecuritiesCode','StockNo','stkNo','股票代號','證券代號','代號']);
-  const name = pick(x, ['Name','SecuritiesName','StockName','stkName','股票名稱','證券名稱','名稱']);
-  const price = pick(x, ['ClosingPrice','Close','ClosePrice','close','收盤價','收盤']);
-  const change = pick(x, ['Change','PriceChange','漲跌','漲跌價差']);
-  const volume = pick(x, ['TradeVolume','Volume','TradingVolume','成交股數','成交量']);
-  if(!code || !name) return null;
-  const preset = ETF_YIELD_PRESET[code];
-  const isETF = isLikelyETF(code,name);
-  return {Code:code,Name:name,ClosingPrice:price,Change:change,TradeVolume:volume,Market:isETF?'ETF':market,Source:source,Yield:preset?preset.yield:'',Note:preset?preset.type:(isETF?'ETF資料':`${market}個股資料`)};
+function marketBadge(x){
+  const cls = x.Type === 'ETF' ? 'etf' : (x.Market === '上櫃' ? 'otc' : '');
+  return `<span class="market ${cls}">${x.Type === 'ETF' ? 'ETF' : x.Market}</span>`;
 }
-function mergeStockData(newRows){
-  const map = new Map();
-  stockData.forEach(x => map.set(x.Code + '_' + x.Market, x));
-  newRows.forEach(x => { if(!x || !x.Code) return; const key = x.Code + '_' + x.Market; map.set(key, {...map.get(key), ...x}); });
-  stockData = Array.from(map.values()).sort((a,b)=>String(a.Code).localeCompare(String(b.Code)));
+function applyYield(value){
+  document.getElementById('yieldRate').value = value;
+  calculate();
+  window.location.hash = 'compound';
 }
-function updateStatus(message){ const el=document.getElementById('dataStatus'); if(el) el.innerHTML = message; }
-async function fetchJson(url){ const res = await fetch(url, {cache:'no-store'}); if(!res.ok) throw new Error('HTTP '+res.status); return await res.json(); }
-async function loadTWSE(){
-  const box=document.getElementById('stockResult'); updateStatus('上市資料更新中…');
-  try{ const data=await fetchJson(TWSE_URL); const rows=data.map(x=>normalizeRecord(x,'上市','TWSE證交所')).filter(Boolean); mergeStockData(rows); updateStatus(`<strong>已載入上市資料：</strong>${rows.length.toLocaleString('zh-TW')} 筆。`); searchStock(); return rows.length; }
-  catch(e){ updateStatus('上市資料暫時無法連線，已保留內建範例資料。'); box.innerHTML='<span class="small">無法即時連線 TWSE 資料，可能是網路或瀏覽器限制。</span>'; return 0; }
+function mopsLinks(code){
+  const q = encodeURIComponent(code || '');
+  return `
+    <a target="_blank" href="https://mops.twse.com.tw/mops/web/index">公開資訊觀測站</a>
+    <a target="_blank" href="https://mops.twse.com.tw/mops/web/t164sb01">查財務報表</a>
+    <a target="_blank" href="https://mops.twse.com.tw/mops/web/t57sb01_q5">查年報</a>
+    <a target="_blank" href="https://www.google.com/search?q=${q}+公開資訊觀測站+年報">Google輔助搜尋</a>`;
 }
-async function loadTPEX(){
-  const box=document.getElementById('stockResult'); updateStatus('上櫃資料更新中…');
-  for(const url of TPEX_URLS){
-    try{ const data=await fetchJson(url); const rows=(Array.isArray(data)?data:[]).map(x=>normalizeRecord(x,'上櫃','TPEx櫃買中心')).filter(Boolean); if(rows.length){ mergeStockData(rows); updateStatus(`<strong>已載入上櫃資料：</strong>${rows.length.toLocaleString('zh-TW')} 筆。`); searchStock(); return rows.length; } }
-    catch(e){}
+function companyCard(x){
+  const preset = ETF_YIELD_PRESET[x.Code];
+  const yieldHtml = preset ? `<br><span class="small">教學用殖利率預設：${preset.yield}%（${preset.type}） <button onclick="applyYield(${preset.yield})">套用到複利模擬器</button></span>` : '';
+  return `<div class="stock-card">
+    <div class="stock-title">${marketBadge(x)}${x.Code}｜${x.Name}</div>
+    <div class="small">
+      市場：${x.Market}｜產業：${x.Industry}｜類型：${x.Type}<br>
+      <strong>公司／ETF在做什麼：</strong>${x.Business}<br>
+      <strong>課堂引導：</strong>${x.Lesson}<br>
+      <strong>風險提醒：</strong>${x.Risk}
+      ${yieldHtml}
+    </div>
+    <div class="stock-actions">${mopsLinks(x.Code)}</div>
+  </div>`;
+}
+function searchCompany(){
+  const q=document.getElementById('stockQuery').value.trim();
+  const box=document.getElementById('stockResult');
+  if(!q){box.innerHTML='<span class="small">請輸入股票、ETF代號或公司名稱。</span>';return;}
+  const rows=companyData.filter(x =>
+    (x.Code||'').includes(q) ||
+    (x.Name||'').includes(q) ||
+    (x.ShortName||'').includes(q) ||
+    (x.Industry||'').includes(q)
+  ).slice(0,10);
+  if(!rows.length){
+    box.innerHTML = `<div class="small">
+      目前內建教學資料找不到「${q}」。<br>
+      您可以先按下方連結到公開資訊觀測站查詢，再把公司加入教學資料庫。<br>
+      <div class="stock-actions mt">${mopsLinks(q)}</div>
+    </div>`;
+    return;
   }
-  updateStatus('上櫃資料暫時無法連線，已保留內建範例資料。'); box.innerHTML='<span class="small">無法即時連線 TPEx 資料，可能是端點調整、CORS 或網路限制。</span>'; return 0;
+  document.getElementById('dataStatus').innerHTML = `<strong>查詢完成：</strong>找到 ${rows.length} 筆教學資料。`;
+  box.innerHTML=rows.map(companyCard).join('');
 }
-async function loadAllMarkets(){
-  document.getElementById('stockResult').innerHTML='資料更新中…';
-  const twse = await loadTWSE();
-  const tpex = await loadTPEX();
-  updateStatus(`<strong>資料更新完成：</strong>上市 ${twse.toLocaleString('zh-TW')} 筆，上櫃 ${tpex.toLocaleString('zh-TW')} 筆；目前可搜尋 ${stockData.length.toLocaleString('zh-TW')} 筆資料。`);
-  searchStock();
+function showCompanyExamples(){
+  document.getElementById('dataStatus').innerHTML = '<strong>範例資料：</strong>適合課堂示範公司研究與ETF觀念。';
+  document.getElementById('stockResult').innerHTML = companyData.map(companyCard).join('');
 }
-function marketBadge(x){ const cls = x.Market === '上櫃' ? 'otc' : (x.Market === 'ETF' ? 'etf' : ''); return `<span class="market ${cls}">${x.Market || '資料'}</span>`; }
-function applyYield(value){ document.getElementById('yieldRate').value = value; calculate(); window.location.hash = 'compound'; }
-function mopsLinks(code){ return `<a target="_blank" href="https://mops.twse.com.tw/mops/web/t164sb01">查財務報表</a><a target="_blank" href="https://mops.twse.com.tw/mops/web/t57sb01_q5">查年報</a>`; }
-function searchStock(){
-  const q=document.getElementById('stockQuery').value.trim(); const box=document.getElementById('stockResult');
-  if(!q){box.innerHTML='<span class="small">請輸入股票或ETF代號。</span>';return;}
-  const rows=stockData.filter(x=>(x.Code||'').includes(q)||(x.Name||'').includes(q)).slice(0,10);
-  if(!rows.length){box.innerHTML='找不到資料。可先按「更新全部資料」，或改輸入代號。';return;}
-  box.innerHTML=rows.map(x=>{
-    const y = x.Yield ? `<br><span class="small">教學用殖利率預設：${x.Yield}% <button onclick="applyYield(${x.Yield})">套用到複利模擬器</button></span>` : '';
-    return `<div class="stock-card"><div class="stock-title">${marketBadge(x)}${x.Code}｜${x.Name}</div><div class="small">收盤價：${x.ClosingPrice || '請以官方資料為準'}｜漲跌：${x.Change || '—'}｜成交量：${x.TradeVolume || '—'}<br>來源：${x.Source || '教學資料'}｜${x.Note || ''}${y}</div><div class="stock-actions">${mopsLinks(x.Code)}</div></div>`;
-  }).join('');
-}
+
 function showLesson(id,el){document.querySelectorAll('.lesson').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
 calculate();
 
