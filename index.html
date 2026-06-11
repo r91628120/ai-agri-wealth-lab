@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI農業青年財商實驗室｜ETF複利與財報學習</title>
+  <title>AI農業青年財富實驗室｜ETF複利與財報學習</title>
   <style>
     :root{
       --bg:#f6fbf7; --card:#ffffff; --ink:#143123; --muted:#5e7569;
@@ -27,12 +27,12 @@
     button.secondary{background:#f4faf6;color:var(--green);border:1px solid #cde6d5;box-shadow:none}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.mt{margin-top:16px}.hero-actions{justify-content:center;margin-top:22px}.hero-actions>*{flex:0 1 auto}
     .result{background:#f4faf6;border:1px solid #cfe6d7;border-radius:20px;padding:16px;margin-top:16px}.big{font-size:32px;font-weight:900;color:var(--green);line-height:1.25}.pill{display:inline-block;padding:7px 10px;border-radius:999px;background:#fff4db;color:#8a5a00;font-weight:800;font-size:13px;margin:4px 4px 0 0}
     table{width:100%;border-collapse:collapse;margin-top:12px;background:#fff;border-radius:16px;overflow:hidden}th,td{padding:12px;border-bottom:1px solid #edf3ef;text-align:right}th:first-child,td:first-child{text-align:left}th{background:#eef9f1;color:#24563a;font-size:14px}tr:last-child td{border-bottom:0}.warn{background:#fff7ed;border:1px solid #fed7aa;color:#8a3d04;border-radius:18px;padding:14px;line-height:1.7}.quote{font-size:21px;font-weight:900;line-height:1.55;background:linear-gradient(135deg,#e8f7ee,#fff);border-left:6px solid var(--green);padding:18px;border-radius:18px}.linkbtn{display:inline-block;text-decoration:none;background:#fff;color:var(--green);border:1px solid #cde6d5;padding:11px 14px;border-radius:14px;font-weight:800;margin:5px 5px 0 0}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{padding:10px 12px;border-radius:999px;background:#f1f7f3;color:var(--muted);font-weight:800;cursor:pointer}.tab.active{background:var(--green);color:#fff}.lesson{display:none}.lesson.active{display:block}
-    canvas{width:100%;height:260px;background:#fff;border:1px solid #edf3ef;border-radius:18px;margin-top:14px}
+    canvas{width:100%;height:260px;background:#fff;border:1px solid #edf3ef;border-radius:18px;margin-top:14px}.status{font-size:13px;color:var(--muted);line-height:1.6;margin-top:10px}.status strong{color:var(--green)}.market{display:inline-block;padding:4px 9px;border-radius:999px;background:#eaf7ef;color:#1f6d43;font-weight:900;font-size:12px;margin-right:5px}.market.otc{background:#eef2ff;color:#33458a}.market.etf{background:#fff4db;color:#8a5a00}.stock-card{padding:12px 0;border-bottom:1px solid #e8f2ec}.stock-card:last-child{border-bottom:0}.stock-title{font-weight:900;font-size:17px;margin-bottom:6px}.stock-actions{margin-top:8px}.stock-actions a,.stock-actions button{display:inline-block;text-decoration:none;background:#fff;color:var(--green);border:1px solid #cde6d5;padding:8px 10px;border-radius:12px;font-weight:800;margin:3px 3px 0 0;font-size:13px;box-shadow:none}
   </style>
 </head>
 <body>
   <header>
-    <div class="badge">🌱 AI農業青年財商實驗室</div>
+    <div class="badge"><h1>🌱 AI農業青年財富實驗室</h1></div>
     <h1>學會種植作物，也學會種植自己的未來</h1>
     <p class="subtitle">從第一份薪水開始，學習記帳、ETF、複利、被動收入與財報判讀。這不是教學生炒股，而是建立面對人生風險的財務素養。</p>
     <div class="row hero-actions">
@@ -60,13 +60,14 @@
       </div>
 
       <div class="card span-5">
-        <h2>② 股票／ETF資料搜尋</h2>
-        <p class="muted">第一版先串接證交所上市每日收盤資料；若瀏覽器擋住跨網域，會使用內建範例資料展示。</p>
+        <h2>② 公司研究／ETF教學查詢</h2>
+        <p class="muted">這一區改成「公司研究模式」：學生輸入代號或名稱後，先認識公司、產業、市場與財報入口，而不是做短線看盤。</p>
         <label>輸入代號或名稱</label>
-        <input id="stockQuery" placeholder="例如：0050、0056、2330、台積電" oninput="searchStock()">
-        <div class="row mt"><button onclick="loadTWSE()">更新證交所資料</button></div>
-        <div id="stockResult" class="result"><span class="small">請輸入股票或ETF代號。</span></div>
-        <p class="small">資料來源可使用臺灣證券交易所 OpenAPI、證交所個股日成交資訊與公開資訊觀測站作為教學查詢入口。</p>
+        <input id="stockQuery" placeholder="例如：3149、正達、2330、台積電、0050、0056" oninput="searchCompany()">
+        <div class="row mt data-actions"><button onclick="searchCompany()">查詢公司／ETF</button><button class="secondary" onclick="showCompanyExamples()">查看範例</button></div>
+        <div id="dataStatus" class="status">可查詢內建教學資料。未來可再擴充成學生自建公司研究資料庫。</div>
+        <div id="stockResult" class="result"><span class="small">請輸入股票、ETF代號或公司名稱。</span></div>
+        <p class="small">定位：這不是看盤工具，而是引導學生進入公開資訊觀測站、年報與財報三張表，完成公司研究報告。</p>
       </div>
 
       <div class="card span-12">
@@ -109,25 +110,21 @@
           <li>用100字寫出：這家公司靠什麼賺錢？風險是什麼？</li>
         </ol>
         <a class="linkbtn" target="_blank" href="https://mops.twse.com.tw/mops/web/index">公開資訊觀測站</a>
+        <a class="linkbtn" target="_blank" href="https://mops.twse.com.tw/mops/web/t164sb01">財務報表查詢</a>
+        <a class="linkbtn" target="_blank" href="https://mops.twse.com.tw/mops/web/t57sb01_q5">年報查詢</a>
         <a class="linkbtn" target="_blank" href="https://www.twse.com.tw/zh/">臺灣證券交易所</a>
-        <a class="linkbtn" target="_blank" href="https://openapi.twse.com.tw/">證交所 OpenAPI</a>
+        <a class="linkbtn" target="_blank" href="https://www.tpex.org.tw/openapi/">櫃買中心 OpenAPI</a>
       </div>
 
       <div class="card span-12">
         <div class="quote">教育重點：不是教學生預測明天股價，而是教學生用時間、紀律、風險管理與財報閱讀，守住自己辛苦賺來的錢。</div>
-        <div class="warn mt"><strong>重要聲明：</strong>本網頁僅供高中職金融素養與複利教育使用，不構成任何投資建議。投資有風險，實際結果會受到市場波動、股利政策、通膨、稅費與個人風險承受度影響。</div>
+        <div class="warn mt"><strong>重要聲明：</strong>本網頁僅供高中職金融素養與複利教育使用，不構成任何投資建議。ETF殖利率為教學用預設值，並非未來保證配息。投資有風險，實際結果會受到市場波動、股利政策、通膨、稅費與個人風險承受度影響。</div>
       </div>
     </section>
   </main>
 
 <script>
-let stockData = [
-  {Code:'0050',Name:'元大台灣50',ClosingPrice:'',Note:'市值型ETF範例'},
-  {Code:'0056',Name:'元大高股息',ClosingPrice:'',Note:'高股息ETF範例'},
-  {Code:'00878',Name:'國泰永續高股息',ClosingPrice:'',Note:'高股息ETF範例'},
-  {Code:'2330',Name:'台積電',ClosingPrice:'',Note:'個股範例'},
-  {Code:'2412',Name:'中華電',ClosingPrice:'',Note:'個股範例'}
-];
+
 function money(n){return Math.round(n).toLocaleString('zh-TW')+' 元'}
 function futureValue(monthly, years, annual){
   const r = annual/100/12; const n = years*12;
@@ -164,22 +161,104 @@ function drawChart(monthly,years,annual){
   ctx.fillStyle='#143123';ctx.font='16px sans-serif';ctx.fillText('資產累積曲線',pad,26);ctx.fillText('第 '+years+' 年：約 '+money(vals[vals.length-1]),pad,52);
 }
 function resetDefault(){document.getElementById('monthly').value=3000;document.getElementById('years').value=20;document.getElementById('annualReturn').value=5;document.getElementById('yieldRate').value=4;calculate();}
-async function loadTWSE(){
-  const box=document.getElementById('stockResult'); box.innerHTML='資料更新中…';
-  try{
-    const res=await fetch('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL');
-    const data=await res.json(); stockData=data.map(x=>({Code:x.Code,Name:x.Name,ClosingPrice:x.ClosingPrice,Note:'證交所上市資料'}));
-    box.innerHTML='<strong>已載入證交所資料：</strong>'+stockData.length.toLocaleString('zh-TW')+' 筆。';
-  }catch(e){box.innerHTML='<span class="small">無法即時連線證交所資料，已保留範例資料。可能是瀏覽器跨網域或網路限制。</span>';}
+
+const ETF_YIELD_PRESET = {
+  '0050': { yield: 2.5, type: '市值型ETF教學預設', name:'元大台灣50', note:'追蹤台灣大型權值股，適合用來教「分散投資」與「市值型ETF」。' },
+  '0056': { yield: 5.0, type: '高股息ETF教學預設', name:'元大高股息', note:'適合用來討論「股息」與「總報酬」的差異。' },
+  '00878': { yield: 5.0, type: '高股息ETF教學預設', name:'國泰永續高股息', note:'適合用來討論ESG、高股息與長期投資。' },
+  '00919': { yield: 6.0, type: '高股息ETF教學預設', name:'群益台灣精選高息', note:'適合提醒學生：高配息不等於保證報酬。' },
+  '00713': { yield: 5.0, type: '高股息ETF教學預設', name:'元大台灣高息低波', note:'可用來說明低波動與股息策略。' }
+};
+
+const companyData = [
+  {Code:'3149', Name:'正達國際光電', ShortName:'正達', Market:'上市', Industry:'光電業', Type:'個股',
+   Business:'玻璃加工、光學元件與觸控相關產品。可作為學生學習「景氣循環、成本、毛利率與現金流」的案例。',
+   Lesson:'適合討論：公司營收會受到產業景氣、產品需求與成本變化影響。學生不要只看股價，要回到財報看營收、毛利率、淨利與現金流。',
+   Risk:'光電與電子零組件產業波動較大，應注意獲利穩定度、負債、現金流與產業競爭。'},
+  {Code:'2330', Name:'台灣積體電路製造', ShortName:'台積電', Market:'上市', Industry:'半導體業', Type:'個股',
+   Business:'晶圓代工龍頭，適合用來教學生看營收成長、毛利率、資本支出與全球供應鏈。',
+   Lesson:'適合討論：好公司也會有合理價格與景氣循環問題。財報閱讀比追高殺低更重要。',
+   Risk:'半導體循環、地緣政治、匯率與大型資本支出。'},
+  {Code:'2412', Name:'中華電信', ShortName:'中華電', Market:'上市', Industry:'通信網路業', Type:'個股',
+   Business:'電信服務、寬頻、行動通訊與企業服務。適合用來教穩定現金流與股利政策。',
+   Lesson:'適合討論：成熟企業不一定高速成長，但可能現金流穩定。',
+   Risk:'市場成長有限、競爭、法規與資本支出。'},
+  {Code:'1216', Name:'統一企業', ShortName:'統一', Market:'上市', Industry:'食品工業', Type:'個股',
+   Business:'食品、飲料、通路與民生消費相關事業。適合農業學生理解「農產品加工、品牌與通路」。',
+   Lesson:'適合討論：農產品從原料到品牌、通路，價值會如何被創造。',
+   Risk:'原物料價格、食品安全、消費需求與通路競爭。'},
+  {Code:'0050', Name:'元大台灣50', ShortName:'0050', Market:'上市', Industry:'ETF', Type:'ETF',
+   Business:'市值型ETF，追蹤台灣大型權值股表現。',
+   Lesson:'適合教「買一籃子股票」與分散風險。', Risk:'仍會受到整體市場波動影響。'},
+  {Code:'0056', Name:'元大高股息', ShortName:'0056', Market:'上市', Industry:'ETF', Type:'ETF',
+   Business:'高股息ETF，用來討論配息、殖利率與總報酬。',
+   Lesson:'適合提醒：配息不等於賺錢，仍要看淨值變化與長期總報酬。', Risk:'成分股與配息政策會調整，殖利率不是保證。'},
+  {Code:'00878', Name:'國泰永續高股息', ShortName:'00878', Market:'上市', Industry:'ETF', Type:'ETF',
+   Business:'高股息與永續概念ETF。',
+   Lesson:'適合討論ESG、高股息與長期投資紀律。', Risk:'市場波動、成分股調整與配息不確定性。'}
+];
+
+function marketBadge(x){
+  const cls = x.Type === 'ETF' ? 'etf' : (x.Market === '上櫃' ? 'otc' : '');
+  return `<span class="market ${cls}">${x.Type === 'ETF' ? 'ETF' : x.Market}</span>`;
 }
-function searchStock(){
-  const q=document.getElementById('stockQuery').value.trim(); const box=document.getElementById('stockResult'); if(!q){box.innerHTML='<span class="small">請輸入股票或ETF代號。</span>';return;}
-  const rows=stockData.filter(x=>(x.Code||'').includes(q)||(x.Name||'').includes(q)).slice(0,8);
-  if(!rows.length){box.innerHTML='找不到資料。可先按「更新證交所資料」，或改輸入代號。';return;}
-  box.innerHTML=rows.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #e8f2ec"><strong>${x.Code}｜${x.Name}</strong><br><span class="small">收盤價：${x.ClosingPrice||'請以官方資料為準'}｜${x.Note||''}</span></div>`).join('');
+function applyYield(value){
+  document.getElementById('yieldRate').value = value;
+  calculate();
+  window.location.hash = 'compound';
 }
+function mopsLinks(code){
+  const q = encodeURIComponent(code || '');
+  return `
+    <a target="_blank" href="https://mops.twse.com.tw/mops/web/index">公開資訊觀測站</a>
+    <a target="_blank" href="https://mops.twse.com.tw/mops/web/t164sb01">查財務報表</a>
+    <a target="_blank" href="https://mops.twse.com.tw/mops/web/t57sb01_q5">查年報</a>
+    <a target="_blank" href="https://www.google.com/search?q=${q}+公開資訊觀測站+年報">Google輔助搜尋</a>`;
+}
+function companyCard(x){
+  const preset = ETF_YIELD_PRESET[x.Code];
+  const yieldHtml = preset ? `<br><span class="small">教學用殖利率預設：${preset.yield}%（${preset.type}） <button onclick="applyYield(${preset.yield})">套用到複利模擬器</button></span>` : '';
+  return `<div class="stock-card">
+    <div class="stock-title">${marketBadge(x)}${x.Code}｜${x.Name}</div>
+    <div class="small">
+      市場：${x.Market}｜產業：${x.Industry}｜類型：${x.Type}<br>
+      <strong>公司／ETF在做什麼：</strong>${x.Business}<br>
+      <strong>課堂引導：</strong>${x.Lesson}<br>
+      <strong>風險提醒：</strong>${x.Risk}
+      ${yieldHtml}
+    </div>
+    <div class="stock-actions">${mopsLinks(x.Code)}</div>
+  </div>`;
+}
+function searchCompany(){
+  const q=document.getElementById('stockQuery').value.trim();
+  const box=document.getElementById('stockResult');
+  if(!q){box.innerHTML='<span class="small">請輸入股票、ETF代號或公司名稱。</span>';return;}
+  const rows=companyData.filter(x =>
+    (x.Code||'').includes(q) ||
+    (x.Name||'').includes(q) ||
+    (x.ShortName||'').includes(q) ||
+    (x.Industry||'').includes(q)
+  ).slice(0,10);
+  if(!rows.length){
+    box.innerHTML = `<div class="small">
+      目前內建教學資料找不到「${q}」。<br>
+      您可以先按下方連結到公開資訊觀測站查詢，再把公司加入教學資料庫。<br>
+      <div class="stock-actions mt">${mopsLinks(q)}</div>
+    </div>`;
+    return;
+  }
+  document.getElementById('dataStatus').innerHTML = `<strong>查詢完成：</strong>找到 ${rows.length} 筆教學資料。`;
+  box.innerHTML=rows.map(companyCard).join('');
+}
+function showCompanyExamples(){
+  document.getElementById('dataStatus').innerHTML = '<strong>範例資料：</strong>適合課堂示範公司研究與ETF觀念。';
+  document.getElementById('stockResult').innerHTML = companyData.map(companyCard).join('');
+}
+
 function showLesson(id,el){document.querySelectorAll('.lesson').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
 calculate();
+
 </script>
 </body>
 </html>
