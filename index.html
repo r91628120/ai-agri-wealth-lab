@@ -65,39 +65,10 @@
         <p class="muted">這一區改成「公司研究模式」：學生輸入代號或名稱後，先認識公司、產業、市場與財報入口，而不是做短線看盤。</p>
         <label>輸入代號或名稱</label>
         <input id="stockQuery" placeholder="例如：3149、正達、2330、台積電、0050、0056" oninput="searchCompany()">
-        <div class="row mt data-actions"><button onclick="searchCompany()">查詢公司／ETF</button><button class="secondary" onclick="showCompanyExamples()">查看範例</button></div>
+        <div class="row mt data-actions"><button onclick="searchCompany()">查詢公司／ETF</button><button class="secondary" onclick="showCompanyExamples()">查看範例</button><button class="secondary" onclick="clearCompanySearch()">清除查詢</button></div>
         <div id="dataStatus" class="status">可查詢內建教學資料。未來可再擴充成學生自建公司研究資料庫。</div>
         <div id="stockResult" class="result"><span class="small">請輸入股票、ETF代號或公司名稱。</span></div>
 
-        <div class="result">
-          <h3>＋新增自訂公司／ETF資料</h3>
-          <p class="small">找不到的公司，可以先建立「自訂研究卡」。資料會暫存在目前這台電腦的瀏覽器中，方便課堂示範與報告產生器使用。</p>
-          <div class="row">
-            <div><label>代號</label><input id="customCode" placeholder="例如：2484"></div>
-            <div><label>名稱</label><input id="customName" placeholder="例如：希華"></div>
-          </div>
-          <div class="row">
-            <div><label>市場</label>
-              <select id="customMarket">
-                <option value="上市">上市</option>
-                <option value="上櫃">上櫃</option>
-                <option value="ETF">ETF</option>
-                <option value="興櫃">興櫃</option>
-              </select>
-            </div>
-            <div><label>產業</label><input id="customIndustry" placeholder="例如：電子零組件業"></div>
-          </div>
-          <label>公司／ETF在做什麼</label>
-          <input id="customBusiness" placeholder="請用一句話描述主要產品、服務或ETF特色">
-          <label>課堂引導</label>
-          <input id="customLesson" placeholder="例如：適合討論營收、毛利率、現金流與產業循環">
-          <label>風險提醒</label>
-          <input id="customRisk" placeholder="例如：產業波動、匯率、原物料成本、競爭壓力">
-          <div class="row mt">
-            <button onclick="addCustomCompany()">加入研究資料庫</button>
-            <button class="secondary" onclick="clearCustomCompanies()">清除自訂資料</button>
-          </div>
-        </div>
 
         <p class="small">定位：這不是看盤工具，而是引導學生進入公開資訊觀測站、年報與財報三張表，完成公司研究報告。</p>
       </div>
@@ -241,12 +212,14 @@ async function fetchCompanyFromGAS(code) {
       Code: data.code,
       Name: data.name,
       ShortName: data.shortName || data.name,
-      Market: data.market,
+      Market: data.market || '上市',
       Industry: data.industry || '待補充',
-      Type: '個股',
-      Business: `公司基本資料已由公開資料帶入。公司網站：${data.website || '待查'}`,
+      Type: data.type || '個股',
+      Business: `公司基本資料已由公開資料自動帶入。公司網站：${data.website || '待查'}`,
       Lesson: '請學生進一步查詢年報、財務報表、營收、毛利率、稅後淨利與營業現金流。',
       Risk: '請學生依照年報中的風險因素、產業變化與財報數字補充。',
+      Website: data.website || '',
+      Raw: data.raw || data,
       Custom: true
     };
 
@@ -446,9 +419,43 @@ function mopsLinks(code){
     <a target="_blank" href="https://mops.twse.com.tw/mops/web/t57sb01_q5">查年報</a>
     <a target="_blank" href="https://www.google.com/search?q=${q}+公開資訊觀測站+年報">Google輔助搜尋</a>`;
 }
+function cleanValue(v){
+  if(v === null || v === undefined) return '';
+  return String(v).trim();
+}
+
+function detailRowsFromRaw(raw){
+  if(!raw || typeof raw !== 'object') return '';
+  const preferred = [
+    '公司代號','公司名稱','公司簡稱','產業別','外國企業註冊地國','住址','營利事業統一編號',
+    '董事長','總經理','發言人','發言人職稱','代理發言人',
+    '總機電話','成立日期','上市日期','普通股每股面額','實收資本額','私募股數',
+    '特別股','編制財務報表類型','股票過戶機構','過戶電話','過戶地址',
+    '簽證會計師事務所','簽證會計師1','簽證會計師2','英文簡稱','英文通訊地址','傳真機號碼','電子郵件信箱','網址'
+  ];
+  const used = new Set();
+  let rows = '';
+  preferred.forEach(k=>{
+    const v = cleanValue(raw[k]);
+    if(v){
+      used.add(k);
+      rows += `<tr><th>${k}</th><td>${v}</td></tr>`;
+    }
+  });
+  Object.keys(raw).forEach(k=>{
+    if(used.has(k)) return;
+    const v = cleanValue(raw[k]);
+    if(v) rows += `<tr><th>${k}</th><td>${v}</td></tr>`;
+  });
+  if(!rows) return '';
+  return `<h3>已抓取到的公司基本資料</h3><table>${rows}</table>`;
+}
+
 function companyCard(x){
   const preset = ETF_YIELD_PRESET[x.Code];
   const yieldHtml = preset ? `<br><span class="small">教學用殖利率預設：${preset.yield}%（${preset.type}） <button onclick="applyYield(${preset.yield})">套用到複利模擬器</button></span>` : '';
+  const detailHtml = detailRowsFromRaw(x.Raw);
+  const website = x.Website ? `<a target="_blank" href="${x.Website}">公司網站</a>` : '';
   return `<div class="stock-card">
     <div class="stock-title">${marketBadge(x)}${x.Code}｜${x.Name}</div>
     <div class="small">
@@ -458,8 +465,15 @@ function companyCard(x){
       <strong>風險提醒：</strong>${x.Risk}
       ${yieldHtml}
     </div>
-    <div class="stock-actions">${mopsLinks(x.Code)}</div>
+    ${detailHtml}
+    <div class="stock-actions">${website}${mopsLinks(x.Code)}</div>
   </div>`;
+}
+
+function clearCompanySearch(){
+  document.getElementById('stockQuery').value = '';
+  document.getElementById('stockResult').innerHTML = '<span class="small">請輸入股票、ETF代號或公司名稱。</span>';
+  document.getElementById('dataStatus').innerHTML = '已清除本次查詢畫面。';
 }
 
 
