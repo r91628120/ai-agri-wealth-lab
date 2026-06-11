@@ -28,18 +28,6 @@
     .result{background:#f4faf6;border:1px solid #cfe6d7;border-radius:20px;padding:16px;margin-top:16px}.big{font-size:32px;font-weight:900;color:var(--green);line-height:1.25}.pill{display:inline-block;padding:7px 10px;border-radius:999px;background:#fff4db;color:#8a5a00;font-weight:800;font-size:13px;margin:4px 4px 0 0}
     table{width:100%;border-collapse:collapse;margin-top:12px;background:#fff;border-radius:16px;overflow:hidden}th,td{padding:12px;border-bottom:1px solid #edf3ef;text-align:right}th:first-child,td:first-child{text-align:left}th{background:#eef9f1;color:#24563a;font-size:14px}tr:last-child td{border-bottom:0}.warn{background:#fff7ed;border:1px solid #fed7aa;color:#8a3d04;border-radius:18px;padding:14px;line-height:1.7}.quote{font-size:21px;font-weight:900;line-height:1.55;background:linear-gradient(135deg,#e8f7ee,#fff);border-left:6px solid var(--green);padding:18px;border-radius:18px}.linkbtn{display:inline-block;text-decoration:none;background:#fff;color:var(--green);border:1px solid #cde6d5;padding:11px 14px;border-radius:14px;font-weight:800;margin:5px 5px 0 0}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{padding:10px 12px;border-radius:999px;background:#f1f7f3;color:var(--muted);font-weight:800;cursor:pointer}.tab.active{background:var(--green);color:#fff}.lesson{display:none}.lesson.active{display:block}
     canvas{width:100%;height:260px;background:#fff;border:1px solid #edf3ef;border-radius:18px;margin-top:14px} textarea{width:100%;min-height:220px;padding:14px;border:1px solid #c8dbce;border-radius:16px;font-size:15px;line-height:1.7;color:var(--ink);background:#fff;resize:vertical}.choice{background:#f4faf6;color:var(--green);border:1px solid #cde6d5;box-shadow:none}.choice.correct{background:#2f8f5b;color:#fff}.choice.wrong{background:#fff7ed;color:#b45309;border-color:#fed7aa}.status{font-size:13px;color:var(--muted);line-height:1.6;margin-top:10px}.status strong{color:var(--green)}.market{display:inline-block;padding:4px 9px;border-radius:999px;background:#eaf7ef;color:#1f6d43;font-weight:900;font-size:12px;margin-right:5px}.market.otc{background:#eef2ff;color:#33458a}.market.etf{background:#fff4db;color:#8a5a00}.stock-card{padding:12px 0;border-bottom:1px solid #e8f2ec}.stock-card:last-child{border-bottom:0}.stock-title{font-weight:900;font-size:17px;margin-bottom:6px}.stock-actions{margin-top:8px}.stock-actions a,.stock-actions button{display:inline-block;text-decoration:none;background:#fff;color:var(--green);border:1px solid #cde6d5;padding:8px 10px;border-radius:12px;font-weight:800;margin:3px 3px 0 0;font-size:13px;box-shadow:none}
-
-    .info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
-    @media(max-width:700px){.info-grid{grid-template-columns:1fr}}
-    .info-box{background:#fff;border:1px solid #e3efe7;border-radius:16px;padding:14px;line-height:1.75}
-    .info-box h3{margin-top:0;color:#1f6d43}
-    .research-list{background:#fff;border:1px solid #e3efe7;border-radius:16px;padding:14px 18px;margin-top:14px}
-    .research-list ul{margin:8px 0 0 20px;padding:0;line-height:1.8}
-    .raw-table th{width:34%;text-align:left;vertical-align:top}
-    .raw-table td{text-align:left;word-break:break-word}
-    .term-card{background:#fff;border:1px solid #e3efe7;border-radius:18px;padding:16px;line-height:1.8}
-    .term-card h3{color:#1f6d43;margin-top:0}
-
   </style>
 </head>
 <body>
@@ -77,7 +65,7 @@
         <p class="muted">這一區改成「公司研究模式」：學生輸入代號或名稱後，先認識公司、產業、市場與財報入口，而不是做短線看盤。</p>
         <label>輸入代號或名稱</label>
         <input id="stockQuery" placeholder="例如：3149、正達、2330、台積電、0050、0056" oninput="searchCompany()">
-        <div class="row mt data-actions"><button onclick="searchCompany()">查詢公司／ETF</button><button class="secondary" onclick="showCompanyExamples()">查看範例</button><button class="secondary" onclick="clearCompanySearch()">清除查詢</button></div>
+        <div class="row mt data-actions"><button onclick="searchCompany()">查詢公司／ETF</button><button class="secondary" onclick="clearCompanySearch()">清除查詢</button></div>
         <div id="dataStatus" class="status">可查詢內建教學資料。未來可再擴充成學生自建公司研究資料庫。</div>
         <div id="stockResult" class="result"><span class="small">請輸入股票、ETF代號或公司名稱。</span></div>
 
@@ -163,68 +151,6 @@
         <a class="linkbtn" target="_blank" href="https://mops.twse.com.tw/mops/web/t57sb01_q5">年報查詢</a>
         <a class="linkbtn" target="_blank" href="https://www.twse.com.tw/zh/">臺灣證券交易所</a>
         <a class="linkbtn" target="_blank" href="https://www.tpex.org.tw/openapi/">櫃買中心 OpenAPI</a>
-      </div>
-
-      <div class="card span-12" id="terms">
-        <h2>⑨ AI金融素養名詞解釋區（國中版）</h2>
-        <p class="muted">用最生活化的方式理解投資與財報。這一區可以當作學生查詢名詞、寫報告與課堂討論的基礎說明。</p>
-
-        <div class="info-grid">
-          <div class="term-card">
-            <h3>預估年化報酬率（%）</h3>
-            <p>代表投資一年平均可能成長多少。假設投入100元，一年後變成105元，年化報酬率就是5%。</p>
-            <p class="small">提醒：這只是模擬用的假設，不代表未來一定會發生。</p>
-          </div>
-          <div class="term-card">
-            <h3>預估殖利率（%）</h3>
-            <p>代表公司或ETF配發股息的比例。假設持有100萬元ETF，殖利率4%，一年約可領到4萬元股息。</p>
-            <p class="small">提醒：殖利率會變動，配息也不是保證。</p>
-          </div>
-          <div class="term-card">
-            <h3>被動收入</h3>
-            <p>不是每天上班打卡，也可能持續收到的收入。例如ETF股息、房租收入、版權收入。</p>
-            <p class="small">重點：被動收入通常需要先累積資產，並且仍然有風險。</p>
-          </div>
-          <div class="term-card">
-            <h3>每年加薪率（%）</h3>
-            <p>代表薪水每年增加的幅度。例如月薪30,000元，每年加薪2%，下一年大約會變成30,600元。</p>
-            <p class="small">提醒：加薪率只是模擬，實際會受到工作能力、產業景氣與公司制度影響。</p>
-          </div>
-        </div>
-
-        <h3 class="mt">財報觀察重點（國中版）</h3>
-        <div class="info-grid">
-          <div class="term-card">
-            <h3>1. 營收是否穩定成長？</h3>
-            <p>營收就是公司賣東西收到的總金額。像農民賣水果，去年賣100萬元，今年賣120萬元，就代表營收成長。</p>
-          </div>
-          <div class="term-card">
-            <h3>2. 毛利率與營業利益率是否穩定？</h3>
-            <p>這是在看公司賣出商品後，扣掉成本與營運費用，還能留下多少錢。越穩定，通常代表經營能力越穩。</p>
-          </div>
-          <div class="term-card">
-            <h3>3. 稅後淨利是否連續獲利？</h3>
-            <p>稅後淨利是公司扣掉成本、薪水、租金、利息與稅金後，最後真正賺到的錢。連續獲利通常比較穩定。</p>
-          </div>
-          <div class="term-card">
-            <h3>4. 營業現金流是否為正？</h3>
-            <p>這是在看公司做本業時，口袋裡是不是真的有現金流進來。有些公司帳面賺錢，但錢還沒收回來，就可能出問題。</p>
-          </div>
-          <div class="term-card">
-            <h3>5. 負債比例是否過高？</h3>
-            <p>負債比例是在看公司借了多少錢。如果資產100萬元、負債80萬元，代表壓力可能很大，要特別小心。</p>
-          </div>
-          <div class="term-card">
-            <h3>用農場來理解財報</h3>
-            <ul>
-              <li>營收 = 賣水果收到多少錢</li>
-              <li>成本 = 肥料、農藥、人工、包裝與運費</li>
-              <li>毛利 = 營收扣掉直接成本後剩下的錢</li>
-              <li>淨利 = 所有支出與稅金都扣掉後，真正剩下的錢</li>
-              <li>現金流 = 客人是不是真的把錢付給你</li>
-            </ul>
-          </div>
-        </div>
       </div>
 
       <div class="card span-12">
@@ -522,64 +448,13 @@ function detailRowsFromRaw(raw){
     if(v) rows += `<tr><th>${k}</th><td>${v}</td></tr>`;
   });
   if(!rows) return '';
-  return `<h3>已抓取到的公司基本資料</h3><table class="raw-table">${rows}</table>`;
-}
-
-
-function researchQuestionsHtml(x){
-  const isETF = x.Type === 'ETF' || x.Industry === 'ETF';
-  if(isETF){
-    return `<div class="research-list">
-      <h3>AI ETF研究問題</h3>
-      <ul>
-        <li>這檔ETF追蹤什麼指數或選股規則？</li>
-        <li>主要成分股有哪些？是否過度集中在少數產業？</li>
-        <li>配息來源是股利、資本利得，還是收益平準金？</li>
-        <li>長期總報酬是否穩定？不是只看殖利率。</li>
-        <li>這檔ETF適合長期定期定額嗎？可能風險是什麼？</li>
-      </ul>
-    </div>`;
-  }
-  const name = x.ShortName || x.Name || '這家公司';
-  return `<div class="research-list">
-    <h3>AI公司研究問題</h3>
-    <ul>
-      <li>${name}主要靠什麼產品或服務賺錢？</li>
-      <li>${name}的主要客戶或市場在哪裡？</li>
-      <li>${name}的競爭對手有哪些？它的優勢是什麼？</li>
-      <li>未來有哪些成長機會？例如AI、半導體、農業科技、通路或品牌。</li>
-      <li>可能面臨哪些風險？例如景氣循環、匯率、原物料、負債或產業競爭。</li>
-    </ul>
-  </div>`;
-}
-
-function companySummaryHtml(x){
-  const raw = x.Raw || {};
-  const fields = [
-    ['公司代號', x.Code || raw['公司代號']],
-    ['公司名稱', x.Name || raw['公司名稱']],
-    ['公司簡稱', x.ShortName || raw['公司簡稱']],
-    ['市場別', x.Market],
-    ['產業別', x.Industry || raw['產業別']],
-    ['董事長', raw['董事長']],
-    ['總經理', raw['總經理']],
-    ['成立日期', raw['成立日期']],
-    ['上市日期', raw['上市日期']],
-    ['實收資本額', raw['實收資本額']],
-    ['公司網址', x.Website || raw['網址']]
-  ].filter(([k,v]) => cleanValue(v));
-
-  if(!fields.length) return '';
-  const boxes = fields.map(([k,v]) => `<div class="info-box"><strong>${k}</strong><br>${cleanValue(v)}</div>`).join('');
-  return `<h3>公司基本資料摘要</h3><div class="info-grid">${boxes}</div>`;
+  return `<h3>已抓取到的公司基本資料</h3><table>${rows}</table>`;
 }
 
 function companyCard(x){
   const preset = ETF_YIELD_PRESET[x.Code];
   const yieldHtml = preset ? `<br><span class="small">教學用殖利率預設：${preset.yield}%（${preset.type}） <button onclick="applyYield(${preset.yield})">套用到複利模擬器</button></span>` : '';
   const detailHtml = detailRowsFromRaw(x.Raw);
-  const summaryHtml = companySummaryHtml(x);
-  const questionsHtml = researchQuestionsHtml(x);
   const website = x.Website ? `<a target="_blank" href="${x.Website}">公司網站</a>` : '';
   return `<div class="stock-card">
     <div class="stock-title">${marketBadge(x)}${x.Code}｜${x.Name}</div>
@@ -590,9 +465,7 @@ function companyCard(x){
       <strong>風險提醒：</strong>${x.Risk}
       ${yieldHtml}
     </div>
-    ${summaryHtml}
     ${detailHtml}
-    ${questionsHtml}
     <div class="stock-actions">${website}${mopsLinks(x.Code)}</div>
   </div>`;
 }
@@ -687,18 +560,11 @@ ${x.Lesson}
 五、風險提醒
 ${x.Risk}
 
-六、AI研究問題
-1. 這家公司／ETF主要靠什麼賺錢或追蹤什麼標的？
-2. 近三年營收是否穩定成長？
-3. 毛利率、營業利益率與稅後淨利是否穩定？
-4. 營業現金流是否為正？
-5. 負債比例是否過高？
-
-七、學生心得
+六、學生心得
 我認為這家公司／ETF值得研究的原因是：
 （請學生補上100～200字）
 
-八、資料來源
+七、資料來源
 公開資訊觀測站、公司年報、財務報表查詢。`;
   document.getElementById('reportText').value=text;
 }
