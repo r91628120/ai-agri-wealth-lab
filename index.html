@@ -27,7 +27,7 @@
     button.secondary{background:#f4faf6;color:var(--green);border:1px solid #cde6d5;box-shadow:none}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.mt{margin-top:16px}.hero-actions{justify-content:center;margin-top:22px}.hero-actions>*{flex:0 1 auto}
     .result{background:#f4faf6;border:1px solid #cfe6d7;border-radius:20px;padding:16px;margin-top:16px}.big{font-size:32px;font-weight:900;color:var(--green);line-height:1.25}.pill{display:inline-block;padding:7px 10px;border-radius:999px;background:#fff4db;color:#8a5a00;font-weight:800;font-size:13px;margin:4px 4px 0 0}
     table{width:100%;border-collapse:collapse;margin-top:12px;background:#fff;border-radius:16px;overflow:hidden}th,td{padding:12px;border-bottom:1px solid #edf3ef;text-align:right}th:first-child,td:first-child{text-align:left}th{background:#eef9f1;color:#24563a;font-size:14px}tr:last-child td{border-bottom:0}.warn{background:#fff7ed;border:1px solid #fed7aa;color:#8a3d04;border-radius:18px;padding:14px;line-height:1.7}.quote{font-size:21px;font-weight:900;line-height:1.55;background:linear-gradient(135deg,#e8f7ee,#fff);border-left:6px solid var(--green);padding:18px;border-radius:18px}.linkbtn{display:inline-block;text-decoration:none;background:#fff;color:var(--green);border:1px solid #cde6d5;padding:11px 14px;border-radius:14px;font-weight:800;margin:5px 5px 0 0}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{padding:10px 12px;border-radius:999px;background:#f1f7f3;color:var(--muted);font-weight:800;cursor:pointer}.tab.active{background:var(--green);color:#fff}.lesson{display:none}.lesson.active{display:block}
-    canvas{width:100%;height:260px;background:#fff;border:1px solid #edf3ef;border-radius:18px;margin-top:14px}.status{font-size:13px;color:var(--muted);line-height:1.6;margin-top:10px}.status strong{color:var(--green)}.market{display:inline-block;padding:4px 9px;border-radius:999px;background:#eaf7ef;color:#1f6d43;font-weight:900;font-size:12px;margin-right:5px}.market.otc{background:#eef2ff;color:#33458a}.market.etf{background:#fff4db;color:#8a5a00}.stock-card{padding:12px 0;border-bottom:1px solid #e8f2ec}.stock-card:last-child{border-bottom:0}.stock-title{font-weight:900;font-size:17px;margin-bottom:6px}.stock-actions{margin-top:8px}.stock-actions a,.stock-actions button{display:inline-block;text-decoration:none;background:#fff;color:var(--green);border:1px solid #cde6d5;padding:8px 10px;border-radius:12px;font-weight:800;margin:3px 3px 0 0;font-size:13px;box-shadow:none}
+    canvas{width:100%;height:260px;background:#fff;border:1px solid #edf3ef;border-radius:18px;margin-top:14px} textarea{width:100%;min-height:220px;padding:14px;border:1px solid #c8dbce;border-radius:16px;font-size:15px;line-height:1.7;color:var(--ink);background:#fff;resize:vertical}.choice{background:#f4faf6;color:var(--green);border:1px solid #cde6d5;box-shadow:none}.choice.correct{background:#2f8f5b;color:#fff}.choice.wrong{background:#fff7ed;color:#b45309;border-color:#fed7aa}.status{font-size:13px;color:var(--muted);line-height:1.6;margin-top:10px}.status strong{color:var(--green)}.market{display:inline-block;padding:4px 9px;border-radius:999px;background:#eaf7ef;color:#1f6d43;font-weight:900;font-size:12px;margin-right:5px}.market.otc{background:#eef2ff;color:#33458a}.market.etf{background:#fff4db;color:#8a5a00}.stock-card{padding:12px 0;border-bottom:1px solid #e8f2ec}.stock-card:last-child{border-bottom:0}.stock-title{font-weight:900;font-size:17px;margin-bottom:6px}.stock-actions{margin-top:8px}.stock-actions a,.stock-actions button{display:inline-block;text-decoration:none;background:#fff;color:var(--green);border:1px solid #cde6d5;padding:8px 10px;border-radius:12px;font-weight:800;margin:3px 3px 0 0;font-size:13px;box-shadow:none}
   </style>
 </head>
 <body>
@@ -37,6 +37,7 @@
     <p class="subtitle">從第一份薪水開始，學習記帳、ETF、複利、被動收入與財報判讀。這不是教學生炒股，而是建立面對人生風險的財務素養。</p>
     <div class="row hero-actions">
       <a class="linkbtn" href="#compound">開始複利模擬</a>
+      <a class="linkbtn" href="#life">人生財富模擬</a>
       <a class="linkbtn" href="#financial">學財報三張表</a>
     </div>
   </header>
@@ -76,8 +77,42 @@
         <table id="compareTable"></table>
       </div>
 
+      <div class="card span-12" id="life">
+        <h2>④ AI人生財富模擬器</h2>
+        <p class="muted">讓學生從18歲開始試算：第一份薪水、每月投入、加薪幅度與退休年齡，如何影響未來資產。</p>
+        <div class="row">
+          <div><label>目前年齡</label><input id="lifeAge" type="number" value="18" min="15" max="70"></div>
+          <div><label>退休年齡</label><input id="lifeRetireAge" type="number" value="65" min="25" max="80"></div>
+          <div><label>目前月薪（元）</label><input id="lifeSalary" type="number" value="32000" min="0" step="1000"></div>
+        </div>
+        <div class="row">
+          <div><label>每月投資（元）</label><input id="lifeMonthly" type="number" value="3000" min="0" step="500"></div>
+          <div><label>每年加薪率（%）</label><input id="lifeRaise" type="number" value="2" min="0" max="10" step="0.1"></div>
+          <div><label>預估年化報酬率（%）</label><input id="lifeReturn" type="number" value="5" min="0" max="15" step="0.1"></div>
+        </div>
+        <div class="row mt"><button onclick="calculateLife()">立即模擬人生資產</button><button class="secondary" onclick="resetLife()">恢復預設</button></div>
+        <div id="lifeResult" class="result"></div>
+        <canvas id="lifeChart" width="900" height="300"></canvas>
+      </div>
+
+      <div class="card span-6">
+        <h2>⑤ 投資詐騙辨識教室</h2>
+        <p class="muted">學生先練習判斷，再看解析。重點是建立「高報酬一定伴隨高風險」的警覺。</p>
+        <div id="scamBox" class="result"></div>
+        <div class="row mt"><button onclick="nextScamQuestion()">下一題</button><button class="secondary" onclick="resetScamQuiz()">重新開始</button></div>
+      </div>
+
+      <div class="card span-6">
+        <h2>⑥ AI公司研究報告產生器</h2>
+        <p class="muted">選一家公司或ETF，先產生報告骨架。學生再到公開資訊觀測站補上最新財報數字。</p>
+        <label>選擇研究標的</label>
+        <select id="reportTarget"></select>
+        <div class="row mt"><button onclick="generateReport()">產生報告草稿</button><button class="secondary" onclick="copyReport()">複製報告</button></div>
+        <textarea id="reportText" placeholder="請先選擇公司，再按產生報告草稿。"></textarea>
+      </div>
+
       <div class="card span-6" id="financial">
-        <h2>④ 財報三張表學習區</h2>
+        <h2>⑦ 財報三張表學習區</h2>
         <div class="tabs">
           <div class="tab active" onclick="showLesson('bs',this)">資產負債表</div>
           <div class="tab" onclick="showLesson('is',this)">損益表</div>
@@ -101,7 +136,7 @@
       </div>
 
       <div class="card span-6">
-        <h2>⑤ 財報資料收集入口</h2>
+        <h2>⑧ 財報資料收集入口</h2>
         <p class="muted">學生做公司研究報告時，可依照下列步驟收集官方資料。</p>
         <ol class="muted">
           <li>先到公開資訊觀測站，輸入公司代號或公司名稱。</li>
@@ -256,8 +291,106 @@ function showCompanyExamples(){
   document.getElementById('stockResult').innerHTML = companyData.map(companyCard).join('');
 }
 
+function calculateLife(){
+  const age=Number(document.getElementById('lifeAge').value)||18;
+  const retire=Number(document.getElementById('lifeRetireAge').value)||65;
+  const salary=Number(document.getElementById('lifeSalary').value)||0;
+  const monthly=Number(document.getElementById('lifeMonthly').value)||0;
+  const raise=Number(document.getElementById('lifeRaise').value)||0;
+  const annual=Number(document.getElementById('lifeReturn').value)||0;
+  const years=Math.max(0,retire-age);
+  const fv=futureValue(monthly,years,annual);
+  const totalInvest=monthly*12*years;
+  const annualPassive=fv*0.04;
+  const salaryAtRetire=salary*Math.pow(1+raise/100,years);
+  const milestones=[];
+  [25,35,45,55,65].forEach(a=>{ if(a>age && a<=retire){ const y=a-age; milestones.push({age:a, asset:futureValue(monthly,y,annual)}); }});
+  let table='<table><tr><th>年齡</th><th>預估資產</th><th>約當每月被動收入<br><span class="small">以4%殖利率估算</span></th></tr>';
+  milestones.forEach(m=>{ table+=`<tr><td>${m.age}歲</td><td>${money(m.asset)}</td><td>${money(m.asset*0.04/12)}</td></tr>`; });
+  table+='</table>';
+  document.getElementById('lifeResult').innerHTML=`<div class="small">${age}歲開始，持續到${retire}歲</div><div class="big">${money(fv)}</div><div class="row mt"><div><strong>總投入本金</strong><br>${money(totalInvest)}</div><div><strong>預估投資成長</strong><br>${money(fv-totalInvest)}</div><div><strong>退休時月薪估算</strong><br>${money(salaryAtRetire)}</div></div><div class="row mt"><div><strong>退休後每年被動收入</strong><br>${money(annualPassive)}</div><div><strong>退休後每月被動收入</strong><br>${money(annualPassive/12)}</div></div>${table}`;
+  drawLifeChart(monthly,years,annual,age);
+}
+function drawLifeChart(monthly,years,annual,startAge){
+  const c=document.getElementById('lifeChart'),ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height);
+  const vals=[]; for(let i=1;i<=years;i++) vals.push(futureValue(monthly,i,annual));
+  const max=Math.max(...vals,1), pad=45;
+  ctx.strokeStyle='#dcebe1'; ctx.lineWidth=1;
+  for(let i=0;i<5;i++){let y=pad+i*(c.height-pad*2)/4; ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(c.width-pad,y);ctx.stroke();}
+  ctx.strokeStyle='#2f8f5b'; ctx.lineWidth=4; ctx.beginPath();
+  vals.forEach((v,i)=>{let x=pad+i*(c.width-pad*2)/Math.max(1,years-1); let y=c.height-pad-(v/max)*(c.height-pad*2); if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}); ctx.stroke();
+  ctx.fillStyle='#143123'; ctx.font='16px sans-serif'; ctx.fillText('人生資產成長曲線',pad,26); ctx.fillText(`第 ${years} 年（約${startAge+years}歲）：${money(vals[vals.length-1]||0)}`,pad,52);
+}
+function resetLife(){
+  document.getElementById('lifeAge').value=18; document.getElementById('lifeRetireAge').value=65; document.getElementById('lifeSalary').value=32000; document.getElementById('lifeMonthly').value=3000; document.getElementById('lifeRaise').value=2; document.getElementById('lifeReturn').value=5; calculateLife();
+}
+const scamQuestions=[
+  {q:'有人說「保證每月獲利10%，不用承擔風險」，這可信嗎？', a:false, exp:'不可信。高報酬一定伴隨高風險，投資沒有保證獲利。'},
+  {q:'對方要求你把錢匯到私人帳戶，並說這是老師帶單專用帳戶，這可信嗎？', a:false, exp:'不可信。匯到私人帳戶是高風險警訊，常見於假投資詐騙。'},
+  {q:'ETF也會漲跌，所以定期定額仍需要長期紀律與風險承受度。這句話正確嗎？', a:true, exp:'正確。ETF分散風險，但不是零風險。'},
+  {q:'看到LINE飆股群說「明天一定漲停」，應該立刻跟單。這句話正確嗎？', a:false, exp:'不正確。這類訊息可能涉及炒作或詐騙，應回到公開資料與風險評估。'}
+];
+let scamIndex=0;
+function renderScamQuestion(){
+  const item=scamQuestions[scamIndex%scamQuestions.length];
+  document.getElementById('scamBox').innerHTML=`<h3>題目 ${scamIndex%scamQuestions.length+1}</h3><p class="muted">${item.q}</p><div class="row"><button class="choice" onclick="answerScam(true,this)">可信／正確</button><button class="choice" onclick="answerScam(false,this)">不可信／不正確</button></div><div id="scamAnswer" class="small mt"></div>`;
+}
+function answerScam(ans,btn){
+  const item=scamQuestions[scamIndex%scamQuestions.length];
+  btn.classList.add(ans===item.a?'correct':'wrong');
+  document.getElementById('scamAnswer').innerHTML=`<strong>${ans===item.a?'答對了！':'再想一下。'}</strong> ${item.exp}`;
+}
+function nextScamQuestion(){ scamIndex++; renderScamQuestion(); }
+function resetScamQuiz(){ scamIndex=0; renderScamQuestion(); }
+function initReportTargets(){
+  const select=document.getElementById('reportTarget');
+  if(!select) return;
+  select.innerHTML=companyData.map(x=>`<option value="${x.Code}">${x.Code}｜${x.Name}</option>`).join('');
+}
+function generateReport(){
+  const code=document.getElementById('reportTarget').value;
+  const x=companyData.find(c=>c.Code===code) || companyData[0];
+  const text=`AI農業青年財富實驗室｜公司研究報告草稿
+
+一、研究標的
+${x.Code}｜${x.Name}
+市場：${x.Market}
+產業：${x.Industry}
+類型：${x.Type}
+
+二、公司／ETF在做什麼
+${x.Business}
+
+三、財報觀察重點
+1. 營收是否穩定成長？
+2. 毛利率與營業利益率是否穩定？
+3. 稅後淨利是否連續獲利？
+4. 營業現金流是否為正？
+5. 負債比例是否過高？
+
+四、課堂分析重點
+${x.Lesson}
+
+五、風險提醒
+${x.Risk}
+
+六、學生心得
+我認為這家公司／ETF值得研究的原因是：
+（請學生補上100～200字）
+
+七、資料來源
+公開資訊觀測站、公司年報、財務報表查詢。`;
+  document.getElementById('reportText').value=text;
+}
+function copyReport(){
+  const t=document.getElementById('reportText'); t.select(); document.execCommand('copy');
+}
+
 function showLesson(id,el){document.querySelectorAll('.lesson').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
 calculate();
+calculateLife();
+renderScamQuestion();
+initReportTargets();
 
 </script>
 </body>
