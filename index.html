@@ -68,6 +68,37 @@
         <div class="row mt data-actions"><button onclick="searchCompany()">查詢公司／ETF</button><button class="secondary" onclick="showCompanyExamples()">查看範例</button></div>
         <div id="dataStatus" class="status">可查詢內建教學資料。未來可再擴充成學生自建公司研究資料庫。</div>
         <div id="stockResult" class="result"><span class="small">請輸入股票、ETF代號或公司名稱。</span></div>
+
+        <div class="result">
+          <h3>＋新增自訂公司／ETF資料</h3>
+          <p class="small">找不到的公司，可以先建立「自訂研究卡」。資料會暫存在目前這台電腦的瀏覽器中，方便課堂示範與報告產生器使用。</p>
+          <div class="row">
+            <div><label>代號</label><input id="customCode" placeholder="例如：2484"></div>
+            <div><label>名稱</label><input id="customName" placeholder="例如：希華"></div>
+          </div>
+          <div class="row">
+            <div><label>市場</label>
+              <select id="customMarket">
+                <option value="上市">上市</option>
+                <option value="上櫃">上櫃</option>
+                <option value="ETF">ETF</option>
+                <option value="興櫃">興櫃</option>
+              </select>
+            </div>
+            <div><label>產業</label><input id="customIndustry" placeholder="例如：電子零組件業"></div>
+          </div>
+          <label>公司／ETF在做什麼</label>
+          <input id="customBusiness" placeholder="請用一句話描述主要產品、服務或ETF特色">
+          <label>課堂引導</label>
+          <input id="customLesson" placeholder="例如：適合討論營收、毛利率、現金流與產業循環">
+          <label>風險提醒</label>
+          <input id="customRisk" placeholder="例如：產業波動、匯率、原物料成本、競爭壓力">
+          <div class="row mt">
+            <button onclick="addCustomCompany()">加入研究資料庫</button>
+            <button class="secondary" onclick="clearCustomCompanies()">清除自訂資料</button>
+          </div>
+        </div>
+
         <p class="small">定位：這不是看盤工具，而是引導學生進入公開資訊觀測站、年報與財報三張表，完成公司研究報告。</p>
       </div>
 
@@ -233,6 +264,92 @@ const companyData = [
    Lesson:'適合討論ESG、高股息與長期投資紀律。', Risk:'市場波動、成分股調整與配息不確定性。'}
 ];
 
+const CUSTOM_COMPANY_KEY = 'aiAgriWealthLabCustomCompanies';
+let customCompanyData = loadCustomCompanies();
+
+function loadCustomCompanies(){
+  try{
+    return JSON.parse(localStorage.getItem(CUSTOM_COMPANY_KEY) || '[]');
+  }catch(e){
+    return [];
+  }
+}
+
+function saveCustomCompanies(){
+  localStorage.setItem(CUSTOM_COMPANY_KEY, JSON.stringify(customCompanyData));
+}
+
+function getAllCompanyData(){
+  const map = new Map();
+  [...companyData, ...customCompanyData].forEach(item => {
+    if(item && item.Code) map.set(String(item.Code), item);
+  });
+  return Array.from(map.values());
+}
+
+function createBlankCompanyFromSearch(){
+  const q = document.getElementById('stockQuery').value.trim();
+  createBlankCompany(q);
+}
+
+function createBlankCompany(codeOrName){
+  const q = String(codeOrName || '').trim();
+  if(!q) return;
+  document.getElementById('customCode').value = /^\d+$/.test(q) ? q : '';
+  document.getElementById('customName').value = /^\d+$/.test(q) ? '' : q;
+  document.getElementById('customIndustry').value = '';
+  document.getElementById('customBusiness').value = '';
+  document.getElementById('customLesson').value = '請學生到公開資訊觀測站查詢年報與財務報表，補上營收、毛利率、稅後淨利與營業現金流。';
+  document.getElementById('customRisk').value = '請依照公司年報與產業資料補上主要風險。';
+  document.getElementById('dataStatus').innerHTML = '<strong>已建立空白研究卡：</strong>請往下填寫資料後按「加入研究資料庫」。';
+}
+
+function addCustomCompany(){
+  const code = document.getElementById('customCode').value.trim();
+  const name = document.getElementById('customName').value.trim();
+  const market = document.getElementById('customMarket').value;
+  const industry = document.getElementById('customIndustry').value.trim() || '待補充';
+  const business = document.getElementById('customBusiness').value.trim() || '請學生查詢公司年報、官方網站或公開資訊觀測站後補充。';
+  const lesson = document.getElementById('customLesson').value.trim() || '請學生觀察營收、毛利率、淨利、負債與現金流。';
+  const risk = document.getElementById('customRisk').value.trim() || '請學生依照年報中的風險因素補充。';
+
+  if(!code || !name){
+    alert('請至少填寫「代號」與「名稱」。');
+    return;
+  }
+
+  const type = market === 'ETF' ? 'ETF' : '個股';
+  const item = {
+    Code: code,
+    Name: name,
+    ShortName: name,
+    Market: market,
+    Industry: industry,
+    Type: type,
+    Business: business,
+    Lesson: lesson,
+    Risk: risk,
+    Custom: true
+  };
+
+  customCompanyData = customCompanyData.filter(x => String(x.Code) !== code);
+  customCompanyData.push(item);
+  saveCustomCompanies();
+  initReportTargets();
+  document.getElementById('stockQuery').value = code;
+  searchCompany();
+  document.getElementById('dataStatus').innerHTML = `<strong>已新增自訂資料：</strong>${code}｜${name}，也已加入報告產生器選單。`;
+}
+
+function clearCustomCompanies(){
+  if(!confirm('確定要清除本機瀏覽器中的自訂公司資料嗎？')) return;
+  customCompanyData = [];
+  saveCustomCompanies();
+  initReportTargets();
+  document.getElementById('dataStatus').innerHTML = '<strong>已清除自訂資料。</strong>內建教學資料仍會保留。';
+  document.getElementById('stockResult').innerHTML = '<span class="small">請輸入股票、ETF代號或公司名稱。</span>';
+}
+
 function marketBadge(x){
   const cls = x.Type === 'ETF' ? 'etf' : (x.Market === '上櫃' ? 'otc' : '');
   return `<span class="market ${cls}">${x.Type === 'ETF' ? 'ETF' : x.Market}</span>`;
@@ -269,7 +386,7 @@ function searchCompany(){
   const q=document.getElementById('stockQuery').value.trim();
   const box=document.getElementById('stockResult');
   if(!q){box.innerHTML='<span class="small">請輸入股票、ETF代號或公司名稱。</span>';return;}
-  const rows=companyData.filter(x =>
+  const rows=getAllCompanyData().filter(x =>
     (x.Code||'').includes(q) ||
     (x.Name||'').includes(q) ||
     (x.ShortName||'').includes(q) ||
@@ -279,7 +396,10 @@ function searchCompany(){
     box.innerHTML = `<div class="small">
       目前內建教學資料找不到「${q}」。<br>
       您可以先按下方連結到公開資訊觀測站查詢，再把公司加入教學資料庫。<br>
-      <div class="stock-actions mt">${mopsLinks(q)}</div>
+      <div class="stock-actions mt">
+        <button onclick="createBlankCompanyFromSearch()">建立空白研究卡</button>
+        ${mopsLinks(q)}
+      </div>
     </div>`;
     return;
   }
@@ -288,7 +408,7 @@ function searchCompany(){
 }
 function showCompanyExamples(){
   document.getElementById('dataStatus').innerHTML = '<strong>範例資料：</strong>適合課堂示範公司研究與ETF觀念。';
-  document.getElementById('stockResult').innerHTML = companyData.map(companyCard).join('');
+  document.getElementById('stockResult').innerHTML = getAllCompanyData().map(companyCard).join('');
 }
 
 function calculateLife(){
@@ -345,11 +465,11 @@ function resetScamQuiz(){ scamIndex=0; renderScamQuestion(); }
 function initReportTargets(){
   const select=document.getElementById('reportTarget');
   if(!select) return;
-  select.innerHTML=companyData.map(x=>`<option value="${x.Code}">${x.Code}｜${x.Name}</option>`).join('');
+  select.innerHTML=getAllCompanyData().map(x=>`<option value="${x.Code}">${x.Code}｜${x.Name}</option>`).join('');
 }
 function generateReport(){
   const code=document.getElementById('reportTarget').value;
-  const x=companyData.find(c=>c.Code===code) || companyData[0];
+  const x=getAllCompanyData().find(c=>c.Code===code) || getAllCompanyData()[0];
   const text=`AI農業青年財富實驗室｜公司研究報告草稿
 
 一、研究標的
