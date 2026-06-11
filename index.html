@@ -191,6 +191,85 @@
 
 <script>
 
+const GAS_STOCK_API = 'https://script.google.com/macros/s/AKfycbyXgbyQvbB8sAZrnQaKiVaQQEL2I8fN0JirElkBdFAqnJGv83KesMCFEpInWX4x-XEk/exec';
+
+async function fetchCompanyFromGAS(code) {
+  const url = GAS_STOCK_API + '?code=' + encodeURIComponent(code);
+  const res = await fetch(url);
+  return await res.json();
+}
+
+     async function searchCompany(){
+  const q = document.getElementById('stockQuery').value.trim();
+  const box = document.getElementById('stockResult');
+
+  if(!q){
+    box.innerHTML = '<span class="small">請輸入股票、ETF代號或公司名稱。</span>';
+    return;
+  }
+
+  let rows = getAllCompanyData().filter(x =>
+    (x.Code || '').includes(q) ||
+    (x.Name || '').includes(q) ||
+    (x.ShortName || '').includes(q) ||
+    (x.Industry || '').includes(q)
+  ).slice(0,10);
+
+  if(rows.length){
+    document.getElementById('dataStatus').innerHTML =
+      `<strong>查詢完成：</strong>找到 ${rows.length} 筆教學資料。`;
+    box.innerHTML = rows.map(companyCard).join('');
+    return;
+  }
+
+  box.innerHTML = '正在從公開資料查詢公司基本資料…';
+
+  try {
+    const data = await fetchCompanyFromGAS(q);
+
+    if(!data.success){
+      box.innerHTML = `
+        <div class="small">
+          查不到「${q}」的上市公司基本資料。<br>
+          ${data.message || ''}
+          <div class="stock-actions mt">${mopsLinks(q)}</div>
+        </div>`;
+      return;
+    }
+
+    const item = {
+      Code: data.code,
+      Name: data.name,
+      ShortName: data.shortName || data.name,
+      Market: data.market,
+      Industry: data.industry || '待補充',
+      Type: '個股',
+      Business: `公司基本資料已由公開資料帶入。公司網站：${data.website || '待查'}`,
+      Lesson: '請學生進一步查詢年報、財務報表、營收、毛利率、稅後淨利與營業現金流。',
+      Risk: '請學生依照年報中的風險因素、產業變化與財報數字補充。',
+      Custom: true
+    };
+
+    customCompanyData = customCompanyData.filter(x => String(x.Code) !== String(item.Code));
+    customCompanyData.push(item);
+    saveCustomCompanies();
+    initReportTargets();
+
+    document.getElementById('dataStatus').innerHTML =
+      `<strong>已自動匯入：</strong>${item.Code}｜${item.Name}`;
+
+    box.innerHTML = companyCard(item);
+
+  } catch(e) {
+    box.innerHTML = `
+      <div class="small">
+        GAS查詢失敗：${e.message}<br>
+        請確認 GAS 網址是否正確、是否已部署為「任何人可存取」。
+      </div>`;
+  }
+}
+
+
 function money(n){return Math.round(n).toLocaleString('zh-TW')+' 元'}
 function futureValue(monthly, years, annual){
   const r = annual/100/12; const n = years*12;
@@ -382,34 +461,7 @@ function companyCard(x){
     <div class="stock-actions">${mopsLinks(x.Code)}</div>
   </div>`;
 }
-function searchCompany(){
-  const q=document.getElementById('stockQuery').value.trim();
-  const box=document.getElementById('stockResult');
-  if(!q){box.innerHTML='<span class="small">請輸入股票、ETF代號或公司名稱。</span>';return;}
-  const rows=getAllCompanyData().filter(x =>
-    (x.Code||'').includes(q) ||
-    (x.Name||'').includes(q) ||
-    (x.ShortName||'').includes(q) ||
-    (x.Industry||'').includes(q)
-  ).slice(0,10);
-  if(!rows.length){
-    box.innerHTML = `<div class="small">
-      目前內建教學資料找不到「${q}」。<br>
-      您可以先按下方連結到公開資訊觀測站查詢，再把公司加入教學資料庫。<br>
-      <div class="stock-actions mt">
-        <button onclick="createBlankCompanyFromSearch()">建立空白研究卡</button>
-        ${mopsLinks(q)}
-      </div>
-    </div>`;
-    return;
-  }
-  document.getElementById('dataStatus').innerHTML = `<strong>查詢完成：</strong>找到 ${rows.length} 筆教學資料。`;
-  box.innerHTML=rows.map(companyCard).join('');
-}
-function showCompanyExamples(){
-  document.getElementById('dataStatus').innerHTML = '<strong>範例資料：</strong>適合課堂示範公司研究與ETF觀念。';
-  document.getElementById('stockResult').innerHTML = getAllCompanyData().map(companyCard).join('');
-}
+
 
 function calculateLife(){
   const age=Number(document.getElementById('lifeAge').value)||18;
