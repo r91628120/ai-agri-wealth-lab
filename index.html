@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI農業青年財商實驗室｜ETF複利與財報學習</title>
+  <style>
+    :root{
+      --bg:#f6fbf7; --card:#ffffff; --ink:#143123; --muted:#5e7569;
+      --green:#2f8f5b; --green2:#dff3e7; --gold:#f3b23c; --line:#d9e8dd;
+      --danger:#b45309; --shadow:0 14px 35px rgba(20,49,35,.10);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif;background:linear-gradient(180deg,#eef9f1 0%,var(--bg) 45%,#fff 100%);color:var(--ink);}
+    header{padding:54px 20px 34px;text-align:center;background:radial-gradient(circle at top,#e2f7e9 0%,#f6fbf7 62%)}
+    .badge{display:inline-block;background:var(--green2);color:var(--green);padding:8px 14px;border-radius:999px;font-weight:700;margin-bottom:14px}
+    h1{font-size:clamp(30px,6vw,54px);line-height:1.12;margin:0 0 14px;letter-spacing:.02em}
+    .subtitle{font-size:clamp(16px,3vw,22px);color:var(--muted);max-width:820px;margin:0 auto 20px;line-height:1.7}
+    .wrap{max-width:1180px;margin:0 auto;padding:18px 18px 64px}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px}
+    .card{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:var(--shadow)}
+    .span-4{grid-column:span 4}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-7{grid-column:span 7}.span-12{grid-column:span 12}
+    @media(max-width:900px){.span-4,.span-5,.span-6,.span-7{grid-column:span 12}.card{padding:18px}}
+    h2{margin:0 0 14px;font-size:24px} h3{margin:14px 0 8px;font-size:18px}.muted{color:var(--muted);line-height:1.7}.small{font-size:13px;color:var(--muted);line-height:1.6}
+    label{display:block;font-weight:700;margin:14px 0 6px} input,select{width:100%;padding:12px 13px;border:1px solid #c8dbce;border-radius:14px;font-size:16px;background:#fff;color:var(--ink)}
+    button{border:0;border-radius:16px;background:var(--green);color:white;font-weight:800;padding:13px 18px;font-size:16px;cursor:pointer;box-shadow:0 8px 18px rgba(47,143,91,.22)}
+    button.secondary{background:#f4faf6;color:var(--green);border:1px solid #cde6d5;box-shadow:none}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.mt{margin-top:16px}.hero-actions{justify-content:center;margin-top:22px}.hero-actions>*{flex:0 1 auto}
+    .result{background:#f4faf6;border:1px solid #cfe6d7;border-radius:20px;padding:16px;margin-top:16px}.big{font-size:32px;font-weight:900;color:var(--green);line-height:1.25}.pill{display:inline-block;padding:7px 10px;border-radius:999px;background:#fff4db;color:#8a5a00;font-weight:800;font-size:13px;margin:4px 4px 0 0}
+    table{width:100%;border-collapse:collapse;margin-top:12px;background:#fff;border-radius:16px;overflow:hidden}th,td{padding:12px;border-bottom:1px solid #edf3ef;text-align:right}th:first-child,td:first-child{text-align:left}th{background:#eef9f1;color:#24563a;font-size:14px}tr:last-child td{border-bottom:0}.warn{background:#fff7ed;border:1px solid #fed7aa;color:#8a3d04;border-radius:18px;padding:14px;line-height:1.7}.quote{font-size:21px;font-weight:900;line-height:1.55;background:linear-gradient(135deg,#e8f7ee,#fff);border-left:6px solid var(--green);padding:18px;border-radius:18px}.linkbtn{display:inline-block;text-decoration:none;background:#fff;color:var(--green);border:1px solid #cde6d5;padding:11px 14px;border-radius:14px;font-weight:800;margin:5px 5px 0 0}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{padding:10px 12px;border-radius:999px;background:#f1f7f3;color:var(--muted);font-weight:800;cursor:pointer}.tab.active{background:var(--green);color:#fff}.lesson{display:none}.lesson.active{display:block}
+    canvas{width:100%;height:260px;background:#fff;border:1px solid #edf3ef;border-radius:18px;margin-top:14px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="badge">🌱 AI農業青年財商實驗室</div>
+    <h1>學會種植作物，也學會種植自己的未來</h1>
+    <p class="subtitle">從第一份薪水開始，學習記帳、ETF、複利、被動收入與財報判讀。這不是教學生炒股，而是建立面對人生風險的財務素養。</p>
+    <div class="row hero-actions">
+      <a class="linkbtn" href="#compound">開始複利模擬</a>
+      <a class="linkbtn" href="#financial">學財報三張表</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="grid">
+      <div class="card span-7" id="compound">
+        <h2>① ETF複利與20年被動收入模擬器</h2>
+        <p class="muted">輸入每月投入金額、年化報酬率與殖利率，讓學生看到時間與紀律的力量。</p>
+        <div class="row">
+          <div><label>每月投入金額（元）</label><input id="monthly" type="number" value="3000" min="0" step="500"></div>
+          <div><label>投資年限</label><input id="years" type="number" value="20" min="1" max="60"></div>
+        </div>
+        <div class="row">
+          <div><label>預估年化報酬率（%）</label><input id="annualReturn" type="number" value="5" min="0" max="20" step="0.1"></div>
+          <div><label>預估殖利率（%）</label><input id="yieldRate" type="number" value="4" min="0" max="12" step="0.1"></div>
+        </div>
+        <div class="row mt"><button onclick="calculate()">立即模擬</button><button class="secondary" onclick="resetDefault()">恢復預設</button></div>
+        <div class="result" id="result"></div>
+        <canvas id="chart" width="900" height="300"></canvas>
+      </div>
+
+      <div class="card span-5">
+        <h2>② 股票／ETF資料搜尋</h2>
+        <p class="muted">第一版先串接證交所上市每日收盤資料；若瀏覽器擋住跨網域，會使用內建範例資料展示。</p>
+        <label>輸入代號或名稱</label>
+        <input id="stockQuery" placeholder="例如：0050、0056、2330、台積電" oninput="searchStock()">
+        <div class="row mt"><button onclick="loadTWSE()">更新證交所資料</button></div>
+        <div id="stockResult" class="result"><span class="small">請輸入股票或ETF代號。</span></div>
+        <p class="small">資料來源可使用臺灣證券交易所 OpenAPI、證交所個股日成交資訊與公開資訊觀測站作為教學查詢入口。</p>
+      </div>
+
+      <div class="card span-12">
+        <h2>③ 每月投入金額比較表</h2>
+        <p class="muted">同樣20年，不同投入金額會產生不同資產與被動收入。這張表最適合課堂討論。</p>
+        <table id="compareTable"></table>
+      </div>
+
+      <div class="card span-6" id="financial">
+        <h2>④ 財報三張表學習區</h2>
+        <div class="tabs">
+          <div class="tab active" onclick="showLesson('bs',this)">資產負債表</div>
+          <div class="tab" onclick="showLesson('is',this)">損益表</div>
+          <div class="tab" onclick="showLesson('cf',this)">現金流量表</div>
+        </div>
+        <div id="bs" class="lesson active">
+          <h3>公司擁有什麼？欠別人多少？</h3>
+          <p class="muted">資產 = 負債 + 股東權益。就像農場有土地、機具、現金，也可能有貸款。</p>
+          <span class="pill">看現金</span><span class="pill">看負債</span><span class="pill">看股東權益</span>
+        </div>
+        <div id="is" class="lesson">
+          <h3>公司有沒有真的賺錢？</h3>
+          <p class="muted">看營收、毛利、營業利益、稅後淨利。農產品賣得多，不代表最後一定有賺錢，成本也很重要。</p>
+          <span class="pill">營收</span><span class="pill">毛利率</span><span class="pill">EPS</span>
+        </div>
+        <div id="cf" class="lesson">
+          <h3>公司口袋裡有沒有現金？</h3>
+          <p class="muted">現金流量表可以看公司是否有穩定現金進來。帳面賺錢但收不到現金，也可能出問題。</p>
+          <span class="pill">營業現金流</span><span class="pill">自由現金流</span><span class="pill">投資現金流</span>
+        </div>
+      </div>
+
+      <div class="card span-6">
+        <h2>⑤ 財報資料收集入口</h2>
+        <p class="muted">學生做公司研究報告時，可依照下列步驟收集官方資料。</p>
+        <ol class="muted">
+          <li>先到公開資訊觀測站，輸入公司代號或公司名稱。</li>
+          <li>下載最近一年度年報或財務報告書。</li>
+          <li>整理三個數字：營收、稅後淨利、營業現金流。</li>
+          <li>用100字寫出：這家公司靠什麼賺錢？風險是什麼？</li>
+        </ol>
+        <a class="linkbtn" target="_blank" href="https://mops.twse.com.tw/mops/web/index">公開資訊觀測站</a>
+        <a class="linkbtn" target="_blank" href="https://www.twse.com.tw/zh/">臺灣證券交易所</a>
+        <a class="linkbtn" target="_blank" href="https://openapi.twse.com.tw/">證交所 OpenAPI</a>
+      </div>
+
+      <div class="card span-12">
+        <div class="quote">教育重點：不是教學生預測明天股價，而是教學生用時間、紀律、風險管理與財報閱讀，守住自己辛苦賺來的錢。</div>
+        <div class="warn mt"><strong>重要聲明：</strong>本網頁僅供高中職金融素養與複利教育使用，不構成任何投資建議。投資有風險，實際結果會受到市場波動、股利政策、通膨、稅費與個人風險承受度影響。</div>
+      </div>
+    </section>
+  </main>
+
+<script>
+let stockData = [
+  {Code:'0050',Name:'元大台灣50',ClosingPrice:'',Note:'市值型ETF範例'},
+  {Code:'0056',Name:'元大高股息',ClosingPrice:'',Note:'高股息ETF範例'},
+  {Code:'00878',Name:'國泰永續高股息',ClosingPrice:'',Note:'高股息ETF範例'},
+  {Code:'2330',Name:'台積電',ClosingPrice:'',Note:'個股範例'},
+  {Code:'2412',Name:'中華電',ClosingPrice:'',Note:'個股範例'}
+];
+function money(n){return Math.round(n).toLocaleString('zh-TW')+' 元'}
+function futureValue(monthly, years, annual){
+  const r = annual/100/12; const n = years*12;
+  if(r===0) return monthly*n;
+  return monthly*((Math.pow(1+r,n)-1)/r);
+}
+function calculate(){
+  const monthly=Number(document.getElementById('monthly').value)||0;
+  const years=Number(document.getElementById('years').value)||20;
+  const annual=Number(document.getElementById('annualReturn').value)||0;
+  const y=Number(document.getElementById('yieldRate').value)||0;
+  const fv=futureValue(monthly,years,annual);
+  const principal=monthly*years*12;
+  const passiveYear=fv*y/100;
+  document.getElementById('result').innerHTML = `
+    <div class="small">${years}年後預估資產</div><div class="big">${money(fv)}</div>
+    <div class="row mt"><div><strong>投入本金</strong><br>${money(principal)}</div><div><strong>預估投資成長</strong><br>${money(fv-principal)}</div></div>
+    <div class="row mt"><div><strong>每年被動收入</strong><br>${money(passiveYear)}</div><div><strong>每月被動收入</strong><br>${money(passiveYear/12)}</div></div>`;
+  drawChart(monthly,years,annual); buildTable(years,annual,y);
+}
+function buildTable(years,annual,y){
+  const amounts=[1000,3000,5000,10000,15000];
+  let html='<tr><th>每月投入</th><th>投資年限</th><th>年化報酬</th><th>期末資產</th><th>每年被動收入</th><th>每月被動收入</th></tr>';
+  amounts.forEach(m=>{const fv=futureValue(m,years,annual); const py=fv*y/100; html+=`<tr><td>${money(m)}</td><td>${years}年</td><td>${annual}%</td><td>${money(fv)}</td><td>${money(py)}</td><td>${money(py/12)}</td></tr>`});
+  document.getElementById('compareTable').innerHTML=html;
+}
+function drawChart(monthly,years,annual){
+  const c=document.getElementById('chart'),ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height);
+  const vals=[]; for(let i=1;i<=years;i++) vals.push(futureValue(monthly,i,annual));
+  const max=Math.max(...vals,1); const pad=45; ctx.strokeStyle='#dcebe1'; ctx.lineWidth=1;
+  for(let i=0;i<5;i++){let y=pad+i*(c.height-pad*2)/4; ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(c.width-pad,y);ctx.stroke();}
+  ctx.strokeStyle='#2f8f5b';ctx.lineWidth=4;ctx.beginPath();
+  vals.forEach((v,i)=>{let x=pad+i*(c.width-pad*2)/Math.max(1,years-1); let y=c.height-pad-(v/max)*(c.height-pad*2); if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}); ctx.stroke();
+  ctx.fillStyle='#143123';ctx.font='16px sans-serif';ctx.fillText('資產累積曲線',pad,26);ctx.fillText('第 '+years+' 年：約 '+money(vals[vals.length-1]),pad,52);
+}
+function resetDefault(){document.getElementById('monthly').value=3000;document.getElementById('years').value=20;document.getElementById('annualReturn').value=5;document.getElementById('yieldRate').value=4;calculate();}
+async function loadTWSE(){
+  const box=document.getElementById('stockResult'); box.innerHTML='資料更新中…';
+  try{
+    const res=await fetch('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL');
+    const data=await res.json(); stockData=data.map(x=>({Code:x.Code,Name:x.Name,ClosingPrice:x.ClosingPrice,Note:'證交所上市資料'}));
+    box.innerHTML='<strong>已載入證交所資料：</strong>'+stockData.length.toLocaleString('zh-TW')+' 筆。';
+  }catch(e){box.innerHTML='<span class="small">無法即時連線證交所資料，已保留範例資料。可能是瀏覽器跨網域或網路限制。</span>';}
+}
+function searchStock(){
+  const q=document.getElementById('stockQuery').value.trim(); const box=document.getElementById('stockResult'); if(!q){box.innerHTML='<span class="small">請輸入股票或ETF代號。</span>';return;}
+  const rows=stockData.filter(x=>(x.Code||'').includes(q)||(x.Name||'').includes(q)).slice(0,8);
+  if(!rows.length){box.innerHTML='找不到資料。可先按「更新證交所資料」，或改輸入代號。';return;}
+  box.innerHTML=rows.map(x=>`<div style="padding:10px 0;border-bottom:1px solid #e8f2ec"><strong>${x.Code}｜${x.Name}</strong><br><span class="small">收盤價：${x.ClosingPrice||'請以官方資料為準'}｜${x.Note||''}</span></div>`).join('');
+}
+function showLesson(id,el){document.querySelectorAll('.lesson').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active')}
+calculate();
+</script>
+</body>
+</html>
